@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Habits Scorecard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        /* Custom styling for the radio button labels to look like selectable cards */
+        .option-label {
+            display: block;
+            padding: 0.8rem 1rem;
+            border-radius: 0.5rem;
+            border: 2px solid #e5e7eb;
+            background-color: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        .option-label:hover {
+            border-color: #a5b4fc; /* indigo-300 */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        /* Style for when a radio input is checked */
+        input[type="radio"]:checked + .option-label {
+            background-color: #eef2ff; /* indigo-50 */
+            border-color: #6366f1; /* indigo-500 */
+            font-weight: 600;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-10 bg-white p-6 rounded-xl shadow-xl border-t-4 border-indigo-500">
+            <h1 class="text-3xl font-extrabold text-gray-800">My Digital Habits Scorecard</h1>
+            <p class="mt-2 text-gray-600">Complete the survey to get your personalized Screen Time Balance Index score and feedback.</p>
+        </header>
+
+        <!-- Survey Form -->
+        <form id="habits-form" onsubmit="calculateScore(event)" class="space-y-8">
+
+            <!-- Section 1: Device Access and Frequency -->
+            <section class="p-6 bg-white rounded-xl shadow-md space-y-6">
+                <h2 class="text-xl font-semibold text-indigo-700 border-b pb-2">Section 1: Access & Frequency</h2>
+
+                <!-- Q1 -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-3">1. How many digital devices do you use in a typical week?</label>
+                    <div class="grid grid-cols-3 gap-4">
+                        <!-- Score: 1 (Low Load) -->
+                        <div><input type="radio" id="q1-opt1" name="q1_devices" value="1" class="hidden" required><label for="q1-opt1" class="option-label">0-1 device</label></div>
+                        <!-- Score: 2 (Medium Load) -->
+                        <div><input type="radio" id="q1-opt2" name="q1_devices" value="2" class="hidden"><label for="q1-opt2" class="option-label">2-3 devices</label></div>
+                        <!-- Score: 3 (High Load) -->
+                        <div><input type="radio" id="q1-opt3" name="q1_devices" value="3" class="hidden"><label for="q1-opt3" class="option-label">4 or more devices</label></div>
+                    </div>
+                </div>
+
+                <!-- Q2 -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-3">2. How often do you use a screen device for non-school activities?</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Score: 1 -->
+                        <div><input type="radio" id="q2-opt1" name="q2_frequency" value="1" class="hidden" required><label for="q2-opt1" class="option-label">Less than once a week</label></div>
+                        <!-- Score: 2 -->
+                        <div><input type="radio" id="q2-opt2" name="q2_frequency" value="2" class="hidden"><label for="q2-opt2" class="option-label">1-2 days a week</label></div>
+                        <!-- Score: 3 -->
+                        <div><input type="radio" id="q2-opt3" name="q2_frequency" value="3" class="hidden"><label for="q2-opt3" class="option-label">Almost every day</label></div>
+                        <!-- Score: 4 -->
+                        <div><input type="radio" id="q2-opt4" name="q2_frequency" value="4" class="hidden"><label for="q2-opt4" class="option-label">Multiple times every day</label></div>
+                    </div>
+                </div>
+
+                <!-- Q3 (Descriptive, No Score) -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-3">3. Which device do you use the MOST for fun/non-school activities?</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div><input type="radio" id="q3-opt1" name="q3_most_used" value="smartphone" class="hidden" required><label for="q3-opt1" class="option-label">Smartphone</label></div>
+                        <div><input type="radio" id="q3-opt2" name="q3_most_used" value="tablet" class="hidden"><label for="q3-opt2" class="option-label">Tablet</label></div>
+                        <div><input type="radio" id="q3-opt3" name="q3_most_used" value="computer" class="hidden"><label for="q3-opt3" class="option-label">Desktop/Laptop</label></div>
+                        <div><input type="radio" id="q3-opt4" name="q3_most_used" value="console" class="hidden"><label for="q3-opt4" class="option-label">Gaming Console</label></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Time and Balance -->
+            <section class="p-6 bg-white rounded-xl shadow-md space-y-6">
+                <h2 class="text-xl font-semibold text-indigo-700 border-b pb-2">Section 2: Time & Balance</h2>
+
+                <!-- Q4 -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-3">4. On a typical school day, how many hours do you spend on screens for fun?</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Score: 1 -->
+                        <div><input type="radio" id="q4-opt1" name="q4_school_hours" value="1" class="hidden" required><label for="q4-opt1" class="option-label">Less than 1 hour</label></div>
+                        <!-- Score: 2 -->
+                        <div><input type="radio" id="q4-opt2" name="q4_school_hours" value="2" class="hidden"><label for="q4-opt2" class="option-label">1 to 2 hours</label></div>
+                        <!-- Score: 3 -->
+                        <div><input type="radio" id="q4-opt3" name="q4_school_hours" value="3" class="hidden"><label for="q4-opt3" class="option-label">2 to 4 hours</label></div>
+                        <!-- Score: 4 -->
+                        <div><input type="radio" id="q4-opt4" name="q4_school_hours" value="4" class="hidden"><label for="q4-opt4" class="option-label">4 hours or more</label></div>
+                    </div>
+                </div>
+
+                <!-- Q5 -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-3">5. On a typical weekend day, how many hours do you spend on screens for fun?</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <!-- Score: 1 -->
+                        <div><input type="radio" id="q5-opt1" name="q5_weekend_hours" value="1" class="hidden" required><label for="q5-opt1" class="option-label">Less than 1 hour</label></div>
+                        <!-- Score: 2 -->
+                        <div><input type="radio" id="q5-opt2" name="q5_weekend_hours" value="2" class="hidden"><label for="q5-opt2" class="option-label">1 to 2 hours</label></div>
+                        <!-- Score: 3 -->
+                        <div><input type="radio" id="q5-opt3" name="q5_weekend_hours" value="3" class="hidden"><label for="q5-opt3" class="option-label">3 to 4 hours</label></div>
+                        <!-- Score: 4 -->
+                        <div><input type="radio" id="q5-opt4" name="q5_weekend_hours" value="4" class="hidden"><label for="q5-opt4" class="option-label">5 hours or more</label></div>
+                    </div>
+                </div>
+
+                <!-- Q6 -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-3">6. How often do you feel that screen time keeps you from doing other things?</label>
+                    <div class="grid grid-cols-3 md:grid-cols-5 gap-4">
+                        <!-- Score: 1 -->
+                        <div><input type="radio" id="q6-opt1" name="q6_interruption" value="1" class="hidden" required><label for="q6-opt1" class="option-label">Never</label></div>
+                        <!-- Score: 2 -->
+                        <div><input type="radio" id="q6-opt2" name="q6_interruption" value="2" class="hidden"><label for="q6-opt2" class="option-label">Rarely</label></div>
+                        <!-- Score: 3 -->
+                        <div><input type="radio" id="q6-opt3" name="q6_interruption" value="3" class="hidden"><label for="q6-opt3" class="option-label">Sometimes</label></div>
+                        <!-- Score: 4 -->
+                        <div><input type="radio" id="q6-opt4" name="q6_interruption" value="4" class="hidden"><label for="q6-opt4" class="option-label">Often</label></div>
+                        <!-- Score: 4 -->
+                        <div><input type="radio" id="q6-opt5" name="q6_interruption" value="4" class="hidden"><label for="q6-opt5" class="option-label">Always</label></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Activities and Perception -->
+            <section class="p-6 bg-white rounded-xl shadow-md space-y-6">
+                <h2 class="text-xl font-semibold text-indigo-700 border-b pb-2">Section 3: Activities & Perception</h2>
+
+                <!-- Q7 (Descriptive, No Score) -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-3">7. What is the MAIN thing you do on a screen for fun?</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div><input type="radio" id="q7-opt1" name="q7_main_activity" value="games" class="hidden" required><label for="q7-opt1" class="option-label">Play games</label></div>
+                        <div><input type="radio" id="q7-opt2" name="q7_main_activity" value="videos" class="hidden"><label for="q7-opt2" class="option-label">Watch videos or movies</label></div>
+                        <div><input type="radio" id="q7-opt3" name="q7_main_activity" value="chatting" class="hidden"><label for="q7-opt3" class="option-label">Chatting or social media</label></div>
+                        <div><input type="radio" id="q7-opt4" name="q7_main_activity" value="creative" class="hidden"><label for="q7-opt4" class="option-label">Reading or creative activities</label></div>
+                    </div>
+                </div>
+
+                <!-- Q8 -->
+                <div>
+                    <label class="block text-gray-700 font-medium mb-3">8. I feel comfortable asking an adult for help if I feel addicted to a game or app.</label>
+                    <div class="grid grid-cols-3 md:grid-cols-5 gap-4">
+                        <!-- Score: 4 (Highest Load/Risk) -->
+                        <div><input type="radio" id="q8-opt1" name="q8_comfort" value="4" class="hidden" required><label for="q8-opt1" class="option-label">Strongly Disagree</label></div>
+                        <!-- Score: 3 -->
+                        <div><input type="radio" id="q8-opt2" name="q8_comfort" value="3" class="hidden"><label for="q8-opt2" class="option-label">Disagree</label></div>
+                        <!-- Score: 2 -->
+                        <div><input type="radio" id="q8-opt3" name="q8_comfort" value="2" class="hidden"><label for="q8-opt3" class="option-label">Neutral</label></div>
+                        <!-- Score: 1 -->
+                        <div><input type="radio" id="q8-opt4" name="q8_comfort" value="1" class="hidden"><label for="q8-opt4" class="option-label">Agree</label></div>
+                        <!-- Score: 1 -->
+                        <div><input type="radio" id="q8-opt5" name="q8_comfort" value="1" class="hidden"><label for="q8-opt5" class="option-label">Strongly Agree</label></div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Submit Button -->
+            <div class="mt-10 pt-6 border-t flex justify-center">
+                <button type="submit" id="submit-button" class="px-8 py-3 bg-indigo-600 text-white font-bold rounded-full shadow-lg hover:bg-indigo-700 transition duration-300 transform hover:scale-105">
+                    Calculate My Balance Index
+                </button>
+            </div>
+        </form>
+
+        <!-- Score and Feedback Area -->
+        <div id="results-area" class="mt-12 p-8 bg-white border-t-4 rounded-xl shadow-lg hidden">
+            <h2 class="text-2xl font-bold mb-4 text-center">Your Screen Time Balance Index</h2>
+            
+            <div class="flex flex-col items-center justify-center space-y-4">
+                <div class="relative inline-flex items-center justify-center w-32 h-32 rounded-full border-4 shadow-inner" id="score-ring">
+                    <span class="text-6xl font-extrabold" id="total-score">0</span>
+                    <span class="absolute bottom-2 text-sm text-gray-600">/ 23 Load</span>
+                </div>
+                
+                <h3 class="text-xl font-semibold mt-4 p-2 rounded-lg" id="score-label"></h3>
+            </div>
+            
+            <div class="mt-6">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">Personalized Feedback:</h4>
+                <p id="feedback-message" class="p-4 rounded-lg"></p>
+            </div>
+
+            <button onclick="resetForm()" class="mt-6 w-full py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-150">
+                Start Over
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Scoring data: Max Load Score = 23 (3+4+4+4+4+4)
+        const MAX_LOAD_SCORE = 23;
+        
+        const feedbackTiers = [
+            // Max Load (23)
+            { limit: 21, label: "Needs Urgent Attention", color: "border-red-500", labelBg: "bg-red-500 text-white", feedback: "Your current screen time habits show a high risk of imbalance and interference with sleep or schoolwork. It's important to talk to an adult about setting a firm screen time schedule." },
+            // High Load (15-20)
+            { limit: 15, label: "High Risk - Review Habits", color: "border-orange-500", labelBg: "bg-orange-500 text-white", feedback: "Your use is on the higher side, especially on weekends, and may be causing some interruption. Try tracking your time for one week to identify areas where you can swap screen time for physical activity or homework." },
+            // Moderate Load (10-14)
+            { limit: 10, label: "Good Habits - Monitor Use", color: "border-yellow-500", labelBg: "bg-yellow-500 text-gray-800", feedback: "You have generally healthy digital habits, but keep an eye on how screens affect your focus and sleep. A little planning can maintain this good balance!" },
+            // Low Load (0-9)
+            { limit: 0, label: "Excellent Balance", color: "border-green-500", labelBg: "bg-green-500 text-white", feedback: "Fantastic job! You've found an excellent balance between screen time and other activities. Keep prioritizing sleep and physical activity!" }
+        ];
+
+        function calculateScore(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('habits-form');
+            const requiredQuestions = ['q1_devices', 'q2_frequency', 'q4_school_hours', 'q5_weekend_hours', 'q6_interruption', 'q8_comfort'];
+            let totalScore = 0;
+            let allAnswered = true;
+
+            // Check required fields and calculate score
+            requiredQuestions.forEach(name => {
+                const element = form.elements[name];
+                if (!element || !element.value) {
+                    allAnswered = false;
+                } else {
+                    // Q3 and Q7 are descriptive and NOT included in the numerical score.
+                    // Q1, Q2, Q4, Q5, Q6, Q8 contribute to the score.
+                    if (['q1_devices', 'q2_frequency', 'q4_school_hours', 'q5_weekend_hours', 'q6_interruption', 'q8_comfort'].includes(name)) {
+                        totalScore += parseInt(element.value);
+                    }
+                }
+            });
+
+            if (!allAnswered) {
+                // If not all critical questions are answered, alert the user
+                console.error("Please answer all questions before calculating the score.");
+                // Using alert() as a required fallback for simple setup validation
+                alert("Please answer all questions before calculating your score.");
+                return;
+            }
+
+            // Get feedback based on the total score
+            const result = feedbackTiers.find(tier => totalScore >= tier.limit);
+
+            // Update UI
+            const resultsArea = document.getElementById('results-area');
+            const totalScoreElement = document.getElementById('total-score');
+            const scoreLabelElement = document.getElementById('score-label');
+            const feedbackMessageElement = document.getElementById('feedback-message');
+            const scoreRingElement = document.getElementById('score-ring');
+
+            // Set content
+            totalScoreElement.textContent = totalScore;
+            scoreLabelElement.textContent = result.label;
+            feedbackMessageElement.textContent = result.feedback;
+            
+            // Set styles
+            resultsArea.className = `mt-12 p-8 bg-white border-t-4 rounded-xl shadow-lg`;
+            resultsArea.style.borderColor = result.color.split('-')[1]; // Set border color dynamically
+            scoreRingElement.className = `relative inline-flex items-center justify-center w-32 h-32 rounded-full border-4 shadow-inner ${result.color.replace('border-', 'border-')}`;
+            scoreLabelElement.className = `text-xl font-semibold mt-4 p-2 rounded-lg ${result.labelBg}`;
+
+            // Show results and hide form
+            document.getElementById('habits-form').classList.add('hidden');
+            resultsArea.classList.remove('hidden');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('habits-form').reset();
+            document.getElementById('habits-form').classList.remove('hidden');
+            document.getElementById('results-area').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
